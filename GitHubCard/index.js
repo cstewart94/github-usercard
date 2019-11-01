@@ -2,7 +2,14 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
-
+axios.get('https://api.github.com/users/cstewart94')
+.then(response => {
+  console.log(response);
+  myCard(response);
+})
+.catch(error => {
+  console.log('The data was not returned', error);
+})
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -45,7 +52,52 @@ const followersArray = [];
 </div>
 
 */
+function myCard(gitUrl){
+  const newCard = document.createElement('div');
+  const newImage = document.createElement('img');
+  const cardInfo = document.createElement('div');
+  const cardName = document.createElement('h3');
+  const cardUsername = document.createElement('p');
+  const cardLocation = document.createElement('p');
+  const cardProfile = document.createElement('p');
+  const profileLink = document.createElement('a');
+  const cardFollowers = document.createElement('p');
+  const cardFollowing = document.createElement('p');
+  const cardBio = document.createElement('p');
 
+
+
+  newCard.classList.add('card');
+  cardInfo.classList.add('card-info');
+  cardName.classList.add('name');
+  cardUsername.classList.add('username');
+  profileLink.setAttribute('href', gitUrl.data.html_url)
+
+  newCard.appendChild(newImage);
+  newCard.appendChild(cardInfo);
+  cardInfo.appendChild(cardName);
+  cardInfo.appendChild(cardUsername);
+  cardInfo.appendChild(cardLocation);
+  cardInfo.appendChild(cardProfile);
+  cardInfo.appendChild(cardFollowers);
+  cardInfo.appendChild(cardFollowing);
+  cardInfo.appendChild(cardBio);
+  //cardProfile.appendChild(profileLink);
+
+  newImage.src = gitUrl.data.avatar_url;
+  cardName.textContent = gitUrl.data.name;
+  cardUsername.textContent = gitUrl.data.login;
+  cardLocation.textContent = `Location: ${gitUrl.data.location}`;
+  cardProfile.textContent = 'Profile:';
+  cardProfile.appendChild(profileLink);
+  profileLink.textContent = gitUrl.data.html_url;
+  cardFollowers.textContent = `Followers: ${gitUrl.data.followers}`;
+  cardFollowing.textContent = `Following: ${gitUrl.data.following}`;
+  cardBio.textContent = gitUrl.data.bio;
+
+  console.log(cardName)
+  document.querySelector('.cards').appendChild(newCard);
+}
 /* List of LS Instructors Github username's: 
   tetondan
   dustinmyers
