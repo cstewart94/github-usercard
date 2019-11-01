@@ -92,7 +92,7 @@ body {
 }
 
 .card {
-  width: 100%;
+  width: 34%;
   padding: 20px;
   display: flex;
   border-radius: 5px;
@@ -121,6 +121,17 @@ body {
   font-size: 1.8rem;
   font-style: italic;
   margin: 3px 0 10px;
+}
+.panel-content {
+  display: none;
+  margin-top: 15px;
+}
+.toggle-on {
+  display: block;
+}
+
+.toggle-big{
+  width:100%;
 }
 
 

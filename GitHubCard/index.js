@@ -2,14 +2,15 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
-axios.get('https://api.github.com/users/cstewart94')
-.then(response => {
-  console.log(response);
-  myCard(response);
-})
-.catch(error => {
-  console.log('The data was not returned', error);
-})
+  // axios.get('https://api.github.com/users/cstewart94')
+  // .then(response => {
+  //   console.log(response);
+  //   myCard(response);
+  //   cards.appendChild(myCard(response.data));
+  // })
+  // .catch(error => {
+  //   console.log('The data was not returned', error);
+  // })
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -31,7 +32,6 @@ axios.get('https://api.github.com/users/cstewart94')
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -52,9 +52,23 @@ const followersArray = [];
 </div>
 
 */
+const allCards = document.querySelector('.cards');
+
+axios.get('https://api.github.com/users/cstewart94')
+.then(response => {
+  console.log(response);
+  const newCards = myCard(response.data);
+  allCards.appendChild(newCards);
+})
+.catch(error => {
+  console.log('The data was not returned', error);
+})
+
+
 function myCard(gitUrl){
   const newCard = document.createElement('div');
   const newImage = document.createElement('img');
+  const hideContainer = document.createElement('div');
   const cardInfo = document.createElement('div');
   const cardName = document.createElement('h3');
   const cardUsername = document.createElement('p');
@@ -65,39 +79,59 @@ function myCard(gitUrl){
   const cardFollowing = document.createElement('p');
   const cardBio = document.createElement('p');
 
-
+  newCard.appendChild(newImage);
+  newCard.appendChild(hideContainer);
+  hideContainer.appendChild(cardName);
+  hideContainer.appendChild(cardUsername);
+  hideContainer.appendChild(cardLocation);
+  hideContainer.appendChild(cardProfile);
+  hideContainer.appendChild(cardFollowers);
+  hideContainer.appendChild(cardFollowing);
+  hideContainer.appendChild(cardBio);
+  //cardProfile.appendChild(profileLink);
 
   newCard.classList.add('card');
   cardInfo.classList.add('card-info');
   cardName.classList.add('name');
   cardUsername.classList.add('username');
-  profileLink.setAttribute('href', gitUrl.data.html_url)
+  hideContainer.classList.add('panel-content');
+  profileLink.setAttribute('href', gitUrl.html_url)
 
-  newCard.appendChild(newImage);
-  newCard.appendChild(cardInfo);
-  cardInfo.appendChild(cardName);
-  cardInfo.appendChild(cardUsername);
-  cardInfo.appendChild(cardLocation);
-  cardInfo.appendChild(cardProfile);
-  cardInfo.appendChild(cardFollowers);
-  cardInfo.appendChild(cardFollowing);
-  cardInfo.appendChild(cardBio);
-  //cardProfile.appendChild(profileLink);
-
-  newImage.src = gitUrl.data.avatar_url;
-  cardName.textContent = gitUrl.data.name;
-  cardUsername.textContent = gitUrl.data.login;
-  cardLocation.textContent = `Location: ${gitUrl.data.location}`;
+  newImage.src = gitUrl.avatar_url;
+  cardName.textContent = gitUrl.name;
+  cardUsername.textContent = gitUrl.login;
+  cardLocation.textContent = `Location: ${gitUrl.location}`;
   cardProfile.textContent = 'Profile:';
   cardProfile.appendChild(profileLink);
-  profileLink.textContent = gitUrl.data.html_url;
-  cardFollowers.textContent = `Followers: ${gitUrl.data.followers}`;
-  cardFollowing.textContent = `Following: ${gitUrl.data.following}`;
-  cardBio.textContent = gitUrl.data.bio;
+  profileLink.textContent = gitUrl.html_url;
+  cardFollowers.textContent = `Followers: ${gitUrl.followers}`;
+  cardFollowing.textContent = `Following: ${gitUrl.following}`;
+  cardBio.textContent = gitUrl.bio;
+  
+  newImage.addEventListener('mouseenter', () => {
+    //1. toggle the hide-button on BOTH buttons
+    hideContainer.classList.toggle('toggle-on');
+    newCard.classList.toggle('toggle-big');
+  })
+  newImage.addEventListener('mouseleave', () => {
+    hideContainer.classList.toggle('toggle-on');
+    newCard.classList.toggle('toggle-big');
+  })
 
-  console.log(cardName)
-  document.querySelector('.cards').appendChild(newCard);
+  return newCard;
 }
+
+
+const followersArray = ['squashgray', 'lyndsiWilliams', 'ArianaShackelford', 'spencer-mcguire', 'NickAlicaya', 'MarFan', 'bseverino', 'phil-mac', 'leachcoding', 'WalterTheCodeGuy', 'crutledgedev', 'msearles25', 'ryankayne', 'RobertDGordon', 'Courtland-Bourgeois'];
+followersArray.forEach(e => {
+  axios.get(`https://api.github.com/users/${e}`).then(response => {
+    console.log(response.data);
+    allCards.appendChild(myCard(response.data));
+  })
+  .catch(error => {
+    console.log('The data was not returned', error);
+  })
+})
 /* List of LS Instructors Github username's: 
   tetondan
   dustinmyers
